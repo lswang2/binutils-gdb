@@ -54,10 +54,10 @@
 |0x3F|D|A|B|res.|0|1|0|1|0|OP|S|
 
 - OP : operation codes
-0. max : select max between A and B for each operation size
+0. average : make average of A and B for each operation size
 1. min : select min between A and B for each operation size
 2. merge : make merge using A and B, {A,B} or {A,B,A,B}
-3. average : make average of A and B for each operation size
+3. max : select max between A and B for each operation size
 
 - S : operation size
 0. byte
@@ -73,7 +73,7 @@
 0. pack signed
 1. pack signed saturated
 2. pack unsigned saturated
-3. unpack
+3. unpack signed
 
 - S : operation size
 0. byte
