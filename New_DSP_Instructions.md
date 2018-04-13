@@ -95,20 +95,6 @@
 0. byte
 1. half word
 
-## saturation instructions
-
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2|1|0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|0|1|1|0|1|U|0|S|
-
-- U : signed/unsigned
-0. signed
-1. unsigned
-
-- S : operation size
-0. byte
-1. half word
-
 ## logical instructions
 
 |31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2 - 1|0|
