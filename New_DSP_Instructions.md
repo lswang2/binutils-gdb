@@ -166,6 +166,23 @@
 0. signed
 1. unsigned
 
+## move partial instructions
+
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4 - 3|2 - 1|0|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|0x3F|D|A|B|res.|1|0|1|SRC|DST|S|
+
+move b[i] -> d[i], and other data from a
+
+- S : tranfer size
+0. byte
+1. half word
+
+- SRC : source byte offset
+
+- DST : destination byte offset
+
+
 ## extension instructions
 
 |31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2|1|0|
