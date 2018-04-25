@@ -24,6 +24,10 @@
 (dnh h-uimm16      "16-bit unsigned immediate" ()                   (immediate (UINT 16)) () () ())
 (dnh h-uimm6       "6-bit unsigned immediate"  ()                   (immediate (UINT 6)) () () ())
 
+(dnh h-uimm2       "2-bit unsigned immediate"  ()                   (immediate (UINT 2)) () () ())
+
+(dnh h-uimm1       "1-bit unsigned immediate"  ()                   (immediate (UINT 1)) () () ())
+
 ; Hardware for the (internal) atomic registers
 (dsh h-atomic-reserve "atomic reserve flag" () (register BI))
 (dsh h-atomic-address "atomic reserve address" () (register SI))
@@ -40,12 +44,15 @@
 (dnf f-op-25-2     "op-25-2"                   ((MACH ORBIS-MACHS)) 25 2) ;; nop
 (dnf f-op-25-5     "op-25-5"                   ((MACH ORBIS-MACHS)) 25 5) ;; sys, trap, *sync, sf*
 (dnf f-op-16-1     "op-16-1"                   ((MACH ORBIS-MACHS)) 16 1) ;; movhi,macrc
+(dnf f-op-7-5      "op-7-5"                    ((MACH ORBIS-MACHS)) 7 5)
 (dnf f-op-7-4      "op-7-4"                    ((MACH ORBIS-MACHS)) 7 4)
+(dnf f-op-7-3      "op-7-3"                    ((MACH ORBIS-MACHS)) 7 3)
 (dnf f-op-3-4      "op-3-4"                    ((MACH ORBIS-MACHS)) 3 4)
 (dnf f-op-9-2      "op-9-2"                    ((MACH ORBIS-MACHS)) 9 2) ;; alu ops upper opcode
 (dnf f-op-9-4      "op-9-4"                    ((MACH ORBIS-MACHS)) 9 4) ;;
 (dnf f-op-7-8      "op-7-8"                    ((MACH ORBIS-MACHS)) 7 8)
 (dnf f-op-7-2      "op-7-2"                    ((MACH ORBIS-MACHS)) 7 2) ;; alu lower upper opc,shroti
+(dnf f-op-0-1      "op-0-1"                    ((MACH ORBIS-MACHS)) 0 1)
 
 ; Reserved fields
 (dnf f-resv-25-26  "resv-25-26"                ((MACH ORBIS-MACHS) RESERVED) 25 26)
@@ -63,6 +70,9 @@
 (dnf f-resv-10-1   "resv-10-1"                 ((MACH ORBIS-MACHS) RESERVED) 10 1)
 (dnf f-resv-7-4    "resv-7-4"                  ((MACH ORBIS-MACHS) RESERVED) 7 4)
 (dnf f-resv-5-2    "resv-5-2"                  ((MACH ORBIS-MACHS) RESERVED) 5 2)
+(dnf f-resv-3-1    "resv-3-1"                  ((MACH ORBIS-MACHS) RESERVED) 3 1)
+(dnf f-resv-2-1    "resv-2-1"                  ((MACH ORBIS-MACHS) RESERVED) 2 1)
+(dnf f-resv-1-1    "resv-1-1"                  ((MACH ORBIS-MACHS) RESERVED) 1 1)
 
 (dnf f-imm16-25-5  "imm16-25-5"                ((MACH ORBIS-MACHS)) 25  5)
 (dnf f-imm16-10-11 "imm16-10-11"               ((MACH ORBIS-MACHS)) 10 11)
@@ -97,6 +107,13 @@
 (dnf f-uimm16    "uimm16"                      ((MACH ORBIS-MACHS))          15 16)
 (df  f-simm16    "simm16"                      ((MACH ORBIS-MACHS) SIGN-OPT) 15 16 INT #f #f)
 (dnf f-uimm6     "uimm6"                       ((MACH ORBIS-MACHS))          5  6) ;; shroti
+(dnf f-uimm2d    "uimm2d"                      ((MACH ORBIS-MACHS))          2  2) ;; 
+(dnf f-uimm2s    "uimm2s"                      ((MACH ORBIS-MACHS))          4  2) ;; 
+(dnf f-uimm1d    "uimm1d"                      ((MACH ORBIS-MACHS))          2  1) ;; 
+(dnf f-uimm1s    "uimm1s"                      ((MACH ORBIS-MACHS))          4  1) ;; 
+(dnf f-uimm1u    "uimm1u"                      ((MACH ORBIS-MACHS))          2  1) ;; 
+(dnf f-uimm1a    "uimm1a"                      ((MACH ORBIS-MACHS))          1  1) ;; 
+(dnf f-uimm1b    "uimm1b"                      ((MACH ORBIS-MACHS))          0  1) ;; 
 
 (define-multi-ifield
   (name f-uimm16-split)
@@ -325,6 +342,15 @@
 (dnop rD                "destination register"             ((MACH ORBIS-MACHS))          h-gpr               f-r1)
 (dnop rA                "source register A"                ((MACH ORBIS-MACHS))          h-gpr               f-r2)
 (dnop rB                "source register B"                ((MACH ORBIS-MACHS))          h-gpr               f-r3)
+
+(dnop uimm2d            "uimm2d"                           ((MACH ORBIS-MACHS))          h-uimm2             f-uimm2d)
+(dnop uimm2s            "uimm2s"                           ((MACH ORBIS-MACHS))          h-uimm2             f-uimm2s)
+(dnop uimm1d            "uimm1d"                           ((MACH ORBIS-MACHS))          h-uimm1             f-uimm1d)
+(dnop uimm1s            "uimm1s"                           ((MACH ORBIS-MACHS))          h-uimm1             f-uimm1s)
+
+(dnop uimm1u            "uimm1u"                           ((MACH ORBIS-MACHS))          h-uimm1             f-uimm1u)
+(dnop uimm1a            "uimm1a"                           ((MACH ORBIS-MACHS))          h-uimm1             f-uimm1a)
+(dnop uimm1b            "uimm1b"                           ((MACH ORBIS-MACHS))          h-uimm1             f-uimm1b)
 
 (define-operand
   (name disp26)
@@ -1268,8 +1294,8 @@
    ("LOGIC" #x7)    ;; logic
    ("MUL"   #x8)    ;; mul halfword
    ("MULW"  #x9)    ;; mul fullword with halfword
-   ("MOV0"  #xA)    ;; partial move
-   ("MOV1"  #xB)    ;; partial move
+;   ("MOV0"  #xA)    ;; partial move
+;   ("MOV1"  #xB)    ;; partial move
    ("MISC"  #xC)    ;; extension/reverse
    )
   )
@@ -1436,37 +1462,27 @@
    )
   )
 
-(define-normal-insn-enum insn-opcode-mov0
-  "partial move insn opcode enums" ((MACH ORBIS-MACHS))
-  OPC_DSP_MOV0_ f-op-3-4
-  (("MOV00_B"    #x0)    ;; move b0 -> d0
-   ("MOV00_H"    #x1)    ;; move h0 -> d0
-   ("MOV01_B"    #x2)    ;; move b0 -> d1
-   ("MOV02_B"    #x4)    ;; move b0 -> d2
-   ("MOV02_H"    #x5)    ;; move h0 -> h1
-   ("MOV03_B"    #x6)    ;; move b0 -> d3
-   ("MOV10_B"    #x8)    ;; move b1 -> d0
-   ("MOV11_B"    #xA)    ;; move b1 -> d1
-   ("MOV12_B"    #xC)    ;; move b1 -> d2
-   ("MOV13_B"    #xE)    ;; move b1 -> d3
-   )
-  )
+(define-normal-insn-enum insn-opcode-move 
+  "move insn opcode enums" ((MACH ORBIS-MACHS)) 
+  OPC_DSP_ f-op-7-3
+    (("MOVE" #x5 ))
+)
 
-(define-normal-insn-enum insn-opcode-mov1
-  "partial move insn opcode enums" ((MACH ORBIS-MACHS))
-  OPC_DSP_MOV1_ f-op-3-4
-  (("MOV20_B"    #x0)    ;; move b2 -> d0
-   ("MOV20_H"    #x1)    ;; move h1 -> d0
-   ("MOV21_B"    #x2)    ;; move b2 -> d1
-   ("MOV22_B"    #x4)    ;; move b2 -> d2
-   ("MOV22_H"    #x5)    ;; move h1 -> h1
-   ("MOV23_B"    #x6)    ;; move b2 -> d3
-   ("MOV30_B"    #x8)    ;; move b3 -> d0
-   ("MOV31_B"    #xA)    ;; move b3 -> d1
-   ("MOV32_B"    #xC)    ;; move b3 -> d2
-   ("MOV33_B"    #xE)    ;; move b3 -> d3
-   )
-  )
+(define-normal-insn-enum insn-opcode-move-size 
+  "move insn opcode enums" ((MACH ORBIS-MACHS)) 
+  OPC_DSP_ f-op-0-1
+    (("SIZE_B" #x0 )
+	 ("SIZE_H" #x1 )
+	)
+)
+
+(define-normal-insn-enum insn-opcode-mul-size 
+  "move insn opcode enums" ((MACH ORBIS-MACHS)) 
+  OPC_DSP_MUL_ f-op-7-5
+    (("HALF" #x11 )
+     ("FULL" #x12 )
+    )
+)
 
 (define-normal-insn-enum insn-opcode-ext
   "extension insn opcode enums" ((MACH ORBIS-MACHS))
@@ -2323,171 +2339,101 @@
 (dsp-mul-basic-insn 1 0 "mulus")
 (dsp-mul-basic-insn 1 1 "muluh")
 
-(define-pmacro (dsp-mul-half-insn sign first second op1)
-  (begin
-    (dni(.sym ld- op1 -h)
-        (.str "ld." op1 ".h" " reg/reg/reg")
-        ((MACH ORBIS-MACHS))
-        (.str "ld." op1 ".h" " $rD,$rA,$rB")
-        (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MUL (.sym OPC_DSP_MUL_ (.upcase (.str op1 "_h"))))
-        (if (eq sign 1)  ;; unsigned
-          (sequence ()
-            (set USI rD (mul (zext USI (subword UHI rA first)) (zext USI (subword UHI rB second))))
-          )
-          (sequence ()
-            (set SI rD (mul (ext SI (subword HI rA first)) (ext SI (subword HI rB second))))
-          )
-        )
-        ()
-    )
-  )
+(dni(.sym ld-mul)
+    (.str "ld.mul reg/reg/reg")
+    ((MACH ORBIS-MACHS))
+    (.str "ld.mul $rD,$rA $uimm1a,$rB $uimm1b")
+    (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MUL_HALF (f-resv-2-1 0) uimm1a uimm1b)
+    (set SI rD (mul (ext SI (subword HI rA uimm1a)) (ext SI (subword HI rB uimm1b))))
+    ()
 )
 
-(dsp-mul-half-insn 0 0 0 "mulbb")
-(dsp-mul-half-insn 0 0 1 "mulbt")
-(dsp-mul-half-insn 0 1 0 "multb")
-(dsp-mul-half-insn 0 1 1 "multt")
-(dsp-mul-half-insn 1 0 0 "mulubb")
-(dsp-mul-half-insn 1 0 1 "mulubt")
-(dsp-mul-half-insn 1 1 0 "mulutb")
-(dsp-mul-half-insn 1 1 1 "mulutt")
-
-(define-pmacro (dsp-mul-word-insn sign high second op1)
-  (begin
-    (dni(.sym ld- op1 -h)
-        (.str "ld." op1 ".h" " reg/reg/reg")
-        ((MACH ORBIS-MACHS))
-        (.str "ld." op1 ".h" " $rD,$rA,$rB")
-        (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MULW (.sym OPC_DSP_MULW_ (.upcase (.str op1 "_h"))))
-        (if (eq sign 1)  ;; unsigned
-          (sequence ((UDI t))
-            (set UDI t (mul (zext UDI rA) (zext UDI (subword UHI rB second))))
-            (if (eq high 1)
-              (set USI t (join USI UHI (subword UHI t 2) (subword UHI t 1)))
-              (set USI rD (subword USI (saturate t #x0 #xFFFFFFFF) 0))
-            )
-          )
-          (sequence ((DI t))
-            (set DI t (mul (ext DI rA) (ext DI (subword HI rB second))))
-            (if (eq high 1)
-              (set SI t (join SI HI (subword HI t 2) (subword HI t 1)))
-              (set SI rD (subword SI (saturate t #x-800000000 #x7FFFFFFF) 0))
-            )
-          )
-        )
-        ()
-    )
-  )
+(dni(.sym ld-mulu)
+    (.str "ld.mulu reg/reg/reg")
+    ((MACH ORBIS-MACHS))
+    (.str "ld.mulu $rD,$rA $uimm1a,$rB $uimm1b")
+    (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MUL_HALF (f-resv-2-1 1) uimm1a uimm1b)
+    (set USI rD (mul (zext USI (subword UHI rA uimm1a)) (zext USI (subword UHI rB uimm1b))))
+    ()
 )
 
-(dsp-mul-word-insn 0 0 0 "mulb")
-(dsp-mul-word-insn 0 0 1 "mult")
-(dsp-mul-word-insn 0 1 0 "mulbh")
-(dsp-mul-word-insn 0 1 1 "multh")
-(dsp-mul-word-insn 1 0 0 "mulub")
-(dsp-mul-word-insn 1 0 1 "mulut")
-(dsp-mul-word-insn 1 1 0 "mulubh")
-(dsp-mul-word-insn 1 1 1 "muluth")
-
-(define-pmacro (dsp-move0-byte-insn first second op1)
-  (begin
-    (dni(.sym ld- op1 -b)
-        (.str "ld." op1 ".b" " reg/reg/reg")
-        ((MACH ORBIS-MACHS))
-        (.str "ld." op1 ".b" " $rD,$rA,$rB")
-        (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MOV0 (.sym OPC_DSP_MOV0_ (.upcase (.str op1 "_b"))))
-        (sequence ((QI t) (QI d0) (QI d1) (QI d2) (QI d3))
-          (set QI t (subword QI rB first))
-          (set QI d0 (if (eq second 0) t (subword QI rA 0)))
-          (set QI d1 (if (eq second 1) t (subword QI rA 1)))
-          (set QI d2 (if (eq second 2) t (subword QI rA 2)))
-          (set QI d3 (if (eq second 3) t (subword QI rA 3)))
-          (set SI rD (join SI QI d3 d2 d1 d0))
-        )
-        ()
+(dni(.sym ld-muls)
+    (.str "ld.muls reg/reg/reg")
+    ((MACH ORBIS-MACHS))
+    (.str "ld.muls $rD,$rA,$rB $uimm1b")
+    (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MUL_FULL (f-resv-2-1 0) (f-resv-1-1 0) uimm1b)
+    (sequence ((DI t))
+      (set DI t (mul (ext DI rA) (ext DI (subword HI rB uimm1b))))
+      (set SI rD (subword SI (saturate t #x-800000000 #x7FFFFFFF) 0))
     )
-  )
+    ()
 )
 
-(dsp-move0-byte-insn 0 0 "mov00")
-(dsp-move0-byte-insn 0 1 "mov01")
-(dsp-move0-byte-insn 0 2 "mov02")
-(dsp-move0-byte-insn 0 3 "mov03")
-(dsp-move0-byte-insn 1 0 "mov10")
-(dsp-move0-byte-insn 1 1 "mov11")
-(dsp-move0-byte-insn 1 2 "mov12")
-(dsp-move0-byte-insn 1 3 "mov13")
-
-(define-pmacro (dsp-move1-byte-insn first second op1)
-  (begin
-    (dni(.sym ld- op1 -b)
-        (.str "ld." op1 ".b" " reg/reg/reg")
-        ((MACH ORBIS-MACHS))
-        (.str "ld." op1 ".b" " $rD,$rA,$rB")
-        (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MOV1 (.sym OPC_DSP_MOV1_ (.upcase (.str op1 "_b"))))
-        (sequence ((QI t) (QI d0) (QI d1) (QI d2) (QI d3))
-          (set QI t (subword QI rB first))
-          (set QI d0 (if (eq second 0) t (subword QI rA 0)))
-          (set QI d1 (if (eq second 1) t (subword QI rA 1)))
-          (set QI d2 (if (eq second 2) t (subword QI rA 2)))
-          (set QI d3 (if (eq second 3) t (subword QI rA 3)))
-          (set SI rD (join SI QI d3 d2 d1 d0))
-        )
-        ()
+(dni(.sym ld-mulh)
+    (.str "ld.mulh reg/reg/reg")
+    ((MACH ORBIS-MACHS))
+    (.str "ld.mulh $rD,$rA,$rB $uimm1b")
+    (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MUL_FULL (f-resv-2-1 0) (f-resv-1-1 1) uimm1b)
+    (sequence ((DI t))
+      (set DI t (mul (ext DI rA) (ext DI (subword HI rB uimm1b))))
+      (set SI t (join SI HI (subword HI t 2) (subword HI t 1)))
     )
-  )
+    ()
 )
 
-(dsp-move1-byte-insn 2 0 "mov20")
-(dsp-move1-byte-insn 2 1 "mov21")
-(dsp-move1-byte-insn 2 2 "mov22")
-(dsp-move1-byte-insn 2 3 "mov23")
-(dsp-move1-byte-insn 3 0 "mov30")
-(dsp-move1-byte-insn 3 1 "mov31")
-(dsp-move1-byte-insn 3 2 "mov32")
-(dsp-move1-byte-insn 3 3 "mov33")
-
-(define-pmacro (dsp-move0-half-insn first second op1)
-  (begin
-    (dni(.sym ld- op1 -h)
-        (.str "ld." op1 ".h" " reg/reg/reg")
-        ((MACH ORBIS-MACHS))
-        (.str "ld." op1 ".h" " $rD,$rA,$rB")
-        (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MOV0 (.sym OPC_DSP_MOV0_ (.upcase (.str op1 "_h"))))
-        (sequence ((HI t) (HI d0) (HI d1))
-          (set HI t (subword HI rB first))
-          (set HI d0 (if (eq second 0) t (subword HI rA 0)))
-          (set HI d1 (if (eq second 1) t (subword HI rA 1)))
-          (set SI rD (join SI HI d1 d0))
-        )
-        ()
+(dni(.sym ld-mulus)
+    (.str "ld.muls reg/reg/reg")
+    ((MACH ORBIS-MACHS))
+    (.str "ld.mulus $rD,$rA,$rB $uimm1b")
+    (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MUL_FULL (f-resv-2-1 1) (f-resv-1-1 0) uimm1b)
+    (sequence ((UDI t))
+      (set UDI t (mul (zext UDI rA) (zext UDI (subword UHI rB uimm1b))))
+      (set USI rD (subword USI (saturate t #x000000000 #xFFFFFFFF) 0))
     )
-  )
+    ()
 )
 
-(dsp-move0-half-insn 0 0 "mov00")
-(dsp-move0-half-insn 0 2 "mov02")
-
-(define-pmacro (dsp-move1-half-insn first second op1)
-  (begin
-    (dni(.sym ld- op1 -h)
-        (.str "ld." op1 ".h" " reg/reg/reg")
-        ((MACH ORBIS-MACHS))
-        (.str "ld." op1 ".h" " $rD,$rA,$rB")
-        (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MOV1 (.sym OPC_DSP_MOV1_ (.upcase (.str op1 "_h"))))
-        (sequence ((HI t) (HI d0) (HI d1))
-          (set HI t (subword HI rB first))
-          (set HI d0 (if (eq second 0) t (subword HI rA 0)))
-          (set HI d1 (if (eq second 1) t (subword HI rA 1)))
-          (set SI rD (join SI HI d1 d0))
-        )
-        ()
+(dni(.sym ld-muluh)
+    (.str "ld.mulh reg/reg/reg")
+    ((MACH ORBIS-MACHS))
+    (.str "ld.muluh $rD,$rA,$rB $uimm1b")
+    (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MUL_FULL (f-resv-2-1 1) (f-resv-1-1 1) uimm1b)
+    (sequence ((UDI t))
+      (set UDI t (mul (zext UDI rA) (zext UDI (subword UHI rB uimm1b))))
+      (set USI t (join USI UHI (subword UHI t 2) (subword UHI t 1)))
     )
-  )
+    ()
 )
 
-(dsp-move1-half-insn 2 0 "mov20")
-(dsp-move1-half-insn 2 2 "mov22")
+(dni(.sym ld-move-b)
+    (.str "ld.move.b reg/reg/reg")
+    ((MACH ORBIS-MACHS))
+    (.str "ld.move.b $rD $uimm2d,$rA,$rB $uimm2s")
+    (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MOVE uimm2s uimm2d OPC_DSP_SIZE_B)
+    (sequence ((QI t) (QI d0) (QI d1) (QI d2) (QI d3))
+      (set QI t (subword QI rB uimm2s))
+      (set QI d0 (if (eq uimm2d 0) t (subword QI rA 0)))
+      (set QI d1 (if (eq uimm2d 1) t (subword QI rA 1)))
+      (set QI d2 (if (eq uimm2d 2) t (subword QI rA 2)))
+      (set QI d3 (if (eq uimm2d 3) t (subword QI rA 3)))
+      (set SI rD (join SI QI d3 d2 d1 d0))
+    )
+    ()
+)
+
+(dni(.sym ld-move-h)
+    (.str "ld.move.h reg/reg/reg")
+    ((MACH ORBIS-MACHS))
+    (.str "ld.move.h $rD $uimm1d,$rA,$rB $uimm1s")
+    (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MOVE uimm1s (f-resv-3-1 0) uimm1d (f-resv-1-1 0) OPC_DSP_SIZE_H)
+    (sequence ((HI t) (HI d0) (HI d1))
+      (set HI t (subword QI rB uimm1s))
+      (set HI d0 (if (eq uimm1d 0) t (subword HI rA 0)))
+      (set HI d1 (if (eq uimm1d 1) t (subword HI rA 1)))
+      (set SI rD (join SI HI d1 d0))
+    )
+    ()
+)
 
 (dni(.sym ld-extbh)
     (.str "ld.extbh reg/reg")

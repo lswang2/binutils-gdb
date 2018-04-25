@@ -156,6 +156,22 @@ static const CGEN_IFMT ifmt_ld_unpack_b ATTRIBUTE_UNUSED = {
   32, 32, 0xfc00ffff, { { F (F_OPCODE) }, { F (F_R1) }, { F (F_R2) }, { F (F_RESV_15_8) }, { F (F_OP_7_4) }, { F (F_OP_3_4) }, { 0 } }
 };
 
+static const CGEN_IFMT ifmt_ld_mul ATTRIBUTE_UNUSED = {
+  32, 32, 0xfc0007fc, { { F (F_OPCODE) }, { F (F_R1) }, { F (F_R2) }, { F (F_R3) }, { F (F_RESV_10_3) }, { F (F_OP_7_5) }, { F (F_RESV_2_1) }, { F (F_UIMM1A) }, { F (F_UIMM1B) }, { 0 } }
+};
+
+static const CGEN_IFMT ifmt_ld_muls ATTRIBUTE_UNUSED = {
+  32, 32, 0xfc0007fe, { { F (F_OPCODE) }, { F (F_R1) }, { F (F_R2) }, { F (F_R3) }, { F (F_RESV_10_3) }, { F (F_OP_7_5) }, { F (F_RESV_2_1) }, { F (F_RESV_1_1) }, { F (F_UIMM1B) }, { 0 } }
+};
+
+static const CGEN_IFMT ifmt_ld_move_b ATTRIBUTE_UNUSED = {
+  32, 32, 0xfc0007e1, { { F (F_OPCODE) }, { F (F_R1) }, { F (F_R2) }, { F (F_R3) }, { F (F_RESV_10_3) }, { F (F_OP_7_3) }, { F (F_UIMM2S) }, { F (F_UIMM2D) }, { F (F_OP_0_1) }, { 0 } }
+};
+
+static const CGEN_IFMT ifmt_ld_move_h ATTRIBUTE_UNUSED = {
+  32, 32, 0xfc0007eb, { { F (F_OPCODE) }, { F (F_R1) }, { F (F_R2) }, { F (F_R3) }, { F (F_RESV_10_3) }, { F (F_OP_7_3) }, { F (F_UIMM1S) }, { F (F_RESV_3_1) }, { F (F_UIMM1D) }, { F (F_RESV_1_1) }, { F (F_OP_0_1) }, { 0 } }
+};
+
 static const CGEN_IFMT ifmt_lf_add_s ATTRIBUTE_UNUSED = {
   32, 32, 0xfc0007ff, { { F (F_OPCODE) }, { F (F_R1) }, { F (F_R2) }, { F (F_R3) }, { F (F_RESV_10_3) }, { F (F_OP_7_8) }, { 0 } }
 };
@@ -1337,221 +1353,53 @@ static const CGEN_OPCODE or1k_cgen_insn_opcode_table[MAX_INSNS] =
     { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
     & ifmt_ld_cmp_eq_b, { 0xfc000087 }
   },
-/* ld.mulbb.h $rD,$rA,$rB */
+/* ld.mul $rD,$rA $uimm1a,$rB $uimm1b */
   {
     { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc000088 }
+    { { MNEM, ' ', OP (RD), ',', OP (RA), ' ', OP (UIMM1A), ',', OP (RB), ' ', OP (UIMM1B), 0 } },
+    & ifmt_ld_mul, { 0xfc000088 }
   },
-/* ld.mulbt.h $rD,$rA,$rB */
+/* ld.mulu $rD,$rA $uimm1a,$rB $uimm1b */
   {
     { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc000089 }
+    { { MNEM, ' ', OP (RD), ',', OP (RA), ' ', OP (UIMM1A), ',', OP (RB), ' ', OP (UIMM1B), 0 } },
+    & ifmt_ld_mul, { 0xfc00008c }
   },
-/* ld.multb.h $rD,$rA,$rB */
+/* ld.muls $rD,$rA,$rB $uimm1b */
   {
     { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc00008a }
+    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), ' ', OP (UIMM1B), 0 } },
+    & ifmt_ld_muls, { 0xfc000090 }
   },
-/* ld.multt.h $rD,$rA,$rB */
+/* ld.mulh $rD,$rA,$rB $uimm1b */
   {
     { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc00008b }
+    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), ' ', OP (UIMM1B), 0 } },
+    & ifmt_ld_muls, { 0xfc000092 }
   },
-/* ld.mulubb.h $rD,$rA,$rB */
+/* ld.mulus $rD,$rA,$rB $uimm1b */
   {
     { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc00008c }
+    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), ' ', OP (UIMM1B), 0 } },
+    & ifmt_ld_muls, { 0xfc000094 }
   },
-/* ld.mulubt.h $rD,$rA,$rB */
+/* ld.muluh $rD,$rA,$rB $uimm1b */
   {
     { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc00008d }
+    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), ' ', OP (UIMM1B), 0 } },
+    & ifmt_ld_muls, { 0xfc000096 }
   },
-/* ld.mulutb.h $rD,$rA,$rB */
+/* ld.move.b $rD $uimm2d,$rA,$rB $uimm2s */
   {
     { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc00008e }
+    { { MNEM, ' ', OP (RD), ' ', OP (UIMM2D), ',', OP (RA), ',', OP (RB), ' ', OP (UIMM2S), 0 } },
+    & ifmt_ld_move_b, { 0xfc0000a0 }
   },
-/* ld.mulutt.h $rD,$rA,$rB */
+/* ld.move.h $rD $uimm1d,$rA,$rB $uimm1s */
   {
     { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc00008f }
-  },
-/* ld.mulb.h $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc000090 }
-  },
-/* ld.mult.h $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc000091 }
-  },
-/* ld.mulbh.h $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc000092 }
-  },
-/* ld.multh.h $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc000093 }
-  },
-/* ld.mulub.h $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc000094 }
-  },
-/* ld.mulut.h $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc000095 }
-  },
-/* ld.mulubh.h $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc000096 }
-  },
-/* ld.muluth.h $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc000097 }
-  },
-/* ld.mov00.b $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000a0 }
-  },
-/* ld.mov01.b $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000a2 }
-  },
-/* ld.mov02.b $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000a4 }
-  },
-/* ld.mov03.b $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000a6 }
-  },
-/* ld.mov10.b $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000a8 }
-  },
-/* ld.mov11.b $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000aa }
-  },
-/* ld.mov12.b $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000ac }
-  },
-/* ld.mov13.b $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000ae }
-  },
-/* ld.mov20.b $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000b0 }
-  },
-/* ld.mov21.b $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000b2 }
-  },
-/* ld.mov22.b $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000b4 }
-  },
-/* ld.mov23.b $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000b6 }
-  },
-/* ld.mov30.b $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000b8 }
-  },
-/* ld.mov31.b $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000ba }
-  },
-/* ld.mov32.b $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000bc }
-  },
-/* ld.mov33.b $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000be }
-  },
-/* ld.mov00.h $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000a1 }
-  },
-/* ld.mov02.h $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000a5 }
-  },
-/* ld.mov20.h $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000b1 }
-  },
-/* ld.mov22.h $rD,$rA,$rB */
-  {
-    { 0, 0, 0, 0 },
-    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
-    & ifmt_ld_cmp_eq_b, { 0xfc0000b5 }
+    { { MNEM, ' ', OP (RD), ' ', OP (UIMM1D), ',', OP (RA), ',', OP (RB), ' ', OP (UIMM1S), 0 } },
+    & ifmt_ld_move_h, { 0xfc0000a1 }
   },
 /* ld.extbh $rD,$rA */
   {
