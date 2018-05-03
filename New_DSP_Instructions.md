@@ -213,7 +213,7 @@ half word transfer should be aligned
 
 |31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2|1|0|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|1|1|0|0|1|0|W|B|
+|0x3F|D|A|B|res.|1|1|0|0|1|0|B|W|
 
 - W : operation unit
 0. each half word
