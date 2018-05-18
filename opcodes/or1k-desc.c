@@ -2103,6 +2103,16 @@ static const CGEN_IBASE or1k_cgen_insn_table[MAX_INSNS] =
     OR1K_INSN_LD_MULUS_H, "ld-mulus-h", "ld.mulus.h", 32,
     { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
   },
+/* ld.muls.b $rD,$rA,$rB */
+  {
+    OR1K_INSN_LD_MULS_B, "ld-muls-b", "ld.muls.b", 32,
+    { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
+  },
+/* ld.mulus.b $rD,$rA,$rB */
+  {
+    OR1K_INSN_LD_MULUS_B, "ld-mulus-b", "ld.mulus.b", 32,
+    { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
+  },
 /* ld.mulh.h $rD,$rA,$rB */
   {
     OR1K_INSN_LD_MULH_H, "ld-mulh-h", "ld.mulh.h", 32,
@@ -2111,6 +2121,16 @@ static const CGEN_IBASE or1k_cgen_insn_table[MAX_INSNS] =
 /* ld.muluh.h $rD,$rA,$rB */
   {
     OR1K_INSN_LD_MULUH_H, "ld-muluh-h", "ld.muluh.h", 32,
+    { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
+  },
+/* ld.mulh.b $rD,$rA,$rB */
+  {
+    OR1K_INSN_LD_MULH_B, "ld-mulh-b", "ld.mulh.b", 32,
+    { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
+  },
+/* ld.muluh.b $rD,$rA,$rB */
+  {
+    OR1K_INSN_LD_MULUH_B, "ld-muluh-b", "ld.muluh.b", 32,
     { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
   },
 /* ld.mul $rD,$rA $uimm1a,$rB $uimm1b */

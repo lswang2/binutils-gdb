@@ -1299,6 +1299,18 @@ static const CGEN_OPCODE or1k_cgen_insn_opcode_table[MAX_INSNS] =
     { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
     & ifmt_ld_add_b, { 0xfc000086 }
   },
+/* ld.muls.b $rD,$rA,$rB */
+  {
+    { 0, 0, 0, 0 },
+    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
+    & ifmt_ld_add_b, { 0xfc00008a }
+  },
+/* ld.mulus.b $rD,$rA,$rB */
+  {
+    { 0, 0, 0, 0 },
+    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
+    & ifmt_ld_add_b, { 0xfc00008e }
+  },
 /* ld.mulh.h $rD,$rA,$rB */
   {
     { 0, 0, 0, 0 },
@@ -1311,41 +1323,53 @@ static const CGEN_OPCODE or1k_cgen_insn_opcode_table[MAX_INSNS] =
     { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
     & ifmt_ld_add_b, { 0xfc000087 }
   },
+/* ld.mulh.b $rD,$rA,$rB */
+  {
+    { 0, 0, 0, 0 },
+    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
+    & ifmt_ld_add_b, { 0xfc00008b }
+  },
+/* ld.muluh.b $rD,$rA,$rB */
+  {
+    { 0, 0, 0, 0 },
+    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
+    & ifmt_ld_add_b, { 0xfc00008f }
+  },
 /* ld.mul $rD,$rA $uimm1a,$rB $uimm1b */
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RD), ',', OP (RA), ' ', OP (UIMM1A), ',', OP (RB), ' ', OP (UIMM1B), 0 } },
-    & ifmt_ld_mul, { 0xfc000088 }
+    & ifmt_ld_mul, { 0xfc000090 }
   },
 /* ld.mulu $rD,$rA $uimm1a,$rB $uimm1b */
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RD), ',', OP (RA), ' ', OP (UIMM1A), ',', OP (RB), ' ', OP (UIMM1B), 0 } },
-    & ifmt_ld_mul, { 0xfc00008c }
+    & ifmt_ld_mul, { 0xfc000094 }
   },
 /* ld.muls $rD,$rA,$rB $uimm1b */
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), ' ', OP (UIMM1B), 0 } },
-    & ifmt_ld_muls, { 0xfc000090 }
+    & ifmt_ld_muls, { 0xfc000098 }
   },
 /* ld.mulh $rD,$rA,$rB $uimm1b */
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), ' ', OP (UIMM1B), 0 } },
-    & ifmt_ld_muls, { 0xfc000092 }
+    & ifmt_ld_muls, { 0xfc00009a }
   },
 /* ld.mulus $rD,$rA,$rB $uimm1b */
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), ' ', OP (UIMM1B), 0 } },
-    & ifmt_ld_muls, { 0xfc000094 }
+    & ifmt_ld_muls, { 0xfc00009c }
   },
 /* ld.muluh $rD,$rA,$rB $uimm1b */
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), ' ', OP (UIMM1B), 0 } },
-    & ifmt_ld_muls, { 0xfc000096 }
+    & ifmt_ld_muls, { 0xfc00009e }
   },
 /* ld.move.b $rD $uimm2d,$rA,$rB $uimm2s */
   {

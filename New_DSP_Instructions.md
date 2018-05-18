@@ -2,23 +2,17 @@
 
 ## compare instructions
 
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 9|8|7|6 - 4|3|2|1|0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|1|0|OP|A|U|F|S|
+rD <- rA op rB for each unit size
+
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7 - 5|4  |3  |2  |1  |0  |
+|:-----:|:-----:|:-----:|:-----:|:----:|:---:|:-:|:-:|:-:|:-:|:-:|
+|0x3F   |D      |A      |B      |res.  |b000 |OP2|OP1|U  |OP |S  |
  
 - U : sign/unsign
 0. signed except eq/ne
 1. signed except ne/ne
 
-- F : set F flag
-0. store result into rD
-1. set F flag
-
-- A : anding (it has valid iff F is 1)
-0. oring each sub results
-1. anding each sub results
-
-- OP : operation codes
+- {OP2,OP1,OP} : operation codes
 0. eq : true if equal
 1. ne : true if not equal
 2. reserved
@@ -34,9 +28,13 @@
 
 ## add/sub instructions
 
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2|1|0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|0|1|0|0|T|U|A|S|
+rD <- rA + rB for each unit size
+or
+rD <- rA - rB for each unit size
+
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7 - 4|3  |2  |1  |0  |
+|:-----:|:-----:|:-----:|:-----:|:----:|:---:|:-:|:-:|:-:|:-:|
+|0x3F   |D      |A      |B      |res.  |b0100|T  |U  |A  |S  |
 
 - T : saturaion bit
 0. normal
@@ -56,9 +54,11 @@
 
 ## select instructions
 
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3 - 1|0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|0|1|0|1|OP|S|
+rD <= select rA or rB for each unit size
+
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7 - 4|3 - 1|0  |
+|:-----:|:-----:|:-----:|:-----:|:----:|:---:|:---:|:-:|
+|0x3F   |D      |A      |B      |res.  |b0101|OP   |S  |
 
 - OP : operation codes
 0. average signed : make average of A and B for each operation size
@@ -76,9 +76,13 @@
 
 ## pack/unpack instructions
 
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2 - 1|0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|0|1|1|0|0|OP|S|
+byte vs nibble
+or
+halfword vs byte
+
+|31 - 26|25 - 21|20 - 16|15 - 11  |10 - 8|7 - 3  |2 - 1|0  |
+|:-----:|:-----:|:-----:|:-------:|:----:|:-----:|:---:|:-:|
+|0x3F   |D      |A      |B or res.|res.  |b0110_0|OP   |S  |
 
 - OP : operation codes
 0. pack signed
@@ -92,9 +96,11 @@
 
 ## shift instructions
 
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2 - 1|0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|0|1|1|0|1|OP|S|
+shift or rotate in each unit size
+
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7 - 3  |2 - 1|0  |
+|:-----:|:-----:|:-----:|:-----:|:----:|:-----:|:---:|:-:|
+|0x3F   |D      |A      |B      |res.  |b0110_1|OP   |S  |
 
 - OP : operation codes
 0. rotate left
@@ -108,21 +114,49 @@
 
 ## logical instructions
 
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2 - 1|0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|0|1|1|1|0|OP|0|
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7 - 2   |1  |0  |
+|:-----:|:-----:|:-----:|:-----:|:----:|:------:|:-:|:-:|
+|0x3F   |D      |A      |B      |res.  |b0111_00|OP |S  |
 
 - OP : operation codes
 0. NAND
 1. NOR
-2. reserved
-3. reserved
 
-## basic multiplication instructions
+## shift bytes instructions
 
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2|1 - 0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|1|0|0|0|0|U|OP|
+rD <- {rA,rB} << (AMT*8)
+
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7 - 2   |1 - 0|
+|:-----:|:-----:|:-----:|:-----:|:----:|:------:|:---:|
+|0x3F   |D      |A      |B      |res.  |b0111_01|AMT  |
+
+- AMT : shift amount
+0. D <= {A0,A1,A2,A3}
+1. D <= {A1,A2,A3,B0}
+2. D <= {A2,A3,B0,B1}
+3. D <= {A3,B0,B1,B2}
+
+## accumulation instructions
+
+rD <- rA + (rB in unit sizes}
+
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7 - 3  |2  |1  |0  |
+|:-----:|:-----:|:-----:|:-----:|:----:|:-----:|:-:|:-:|:-:|
+|0x3F   |D      |A      |B      |res.  |b0111_1|U  |0  |S  |
+
+- U : signed/unsigned
+0. signed
+1. unsigned
+
+- S : operation size
+0. byte
+1. half word
+
+## basic halfword multiplication instructions
+
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7 - 3  |2  |1 - 0|
+|:-----:|:-----:|:-----:|:-----:|:----:|:-----:|:-:|:---:|
+|0x3F   |D      |A      |B      |res.  |b1000_0|U  |OP   |
 
 - OP : operation codes
 0. multiply and add saturated
@@ -134,11 +168,25 @@
 0. signed
 1. unsigned
 
+## basic byte multiplication instructions
+
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7 - 3  |2  |1  |0  |
+|:-----:|:-----:|:-----:|:-----:|:----:|:-----:|:-:|:-:|:-:|
+|0x3F   |D      |A      |B      |res.  |b1000_1|U  |1  |OP |
+
+- OP : operation codes
+0. multiply saturated into byte
+1. multiply and get higher byte
+
+- U : signed/unsigned
+0. signed
+1. unsigned
+
 ## half word multiplication instructions
 
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2|1|0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|1|0|0|0|1|U|X|Y|
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7 - 3  |2  |1  |0  |
+|:-----:|:-----:|:-----:|:-----:|:----:|:-----:|:-:|:-:|:-:|
+|0x3F   |D      |A      |B      |res.  |b1001_0|U  |X  |Y  |
 
 - X : selection of A
 0. use higher half word of A
@@ -154,9 +202,9 @@
 
 ## word and half word multiplication instructions
 
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2|1|0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|1|0|0|1|0|U|H|Y|
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7 - 3  |2  |1  |0  |
+|:-----:|:-----:|:-----:|:-----:|:----:|:-----:|:-:|:-:|:-:|
+|0x3F   |D      |A      |B      |res.  |b1001_1|U  |H  |Y  |
 
 - Y : selection of B
 0. use higher half word of B
@@ -172,9 +220,9 @@
 
 ## move partial instructions
 
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4 - 3|2 - 1|0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|1|0|1|SRC|DST|S|
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7 - 5|4 - 3|2 - 1|0  |
+|:-----:|:-----:|:-----:|:-----:|:----:|:---:|:---:|:---:|:-:|
+|0x3F   |D      |A      |B      |res.  |b101 |SRC  |DST  |S  |
 
 move b[i] -> d[i], and other data from a
 half word transfer should be aligned
@@ -190,9 +238,9 @@ half word transfer should be aligned
 
 ## extension instructions
 
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2|1|0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|1|0|0|1|0|U|T|S|
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7 - 3  |2  |1  |0  |
+|:-----:|:-----:|:-----:|:-----:|:----:|:-----:|:-:|:-:|:-:|
+|0x3F   |D      |A      |B      |res.  |b1100_0|U  |T  |S  |
 
 - U : signed/unsigned
 0. signed
@@ -208,9 +256,9 @@ half word transfer should be aligned
 
 ## ordering instructions
 
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2|1|0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|1|1|0|0|1|0|B|W|
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7 - 2   |1  |0  |
+|:-----:|:-----:|:-----:|:-----:|:----:|:------:|:-:|:-:|
+|0x3F   |D      |A      |B      |res.  |b1100_10|B  |W  |
 
 - W : operation unit
 0. each half word
@@ -219,3 +267,25 @@ half word transfer should be aligned
 - B : bit/byte
 0. bit
 1. byte
+
+- {TS}
+01. {xx,b2,b3} -> {ext,b2,ext,b3}
+
+## flag instructions
+
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7 - 2   |1  |0  |
+|:-----:|:-----:|:-----:|:-----:|:----:|:------:|:-:|:-:|
+|0x3F   |D      |A      |B      |res.  |b1101_00|O  |A  |
+
+- O : overflow flag
+0. GE_flag
+1. OV_flag
+
+- A : anding
+0. ORing
+1. ANDing
+
+
+
+
+

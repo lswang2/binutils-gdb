@@ -1440,19 +1440,15 @@
   (("MADDS_H"   #x0)    ;; mul add saturated
    ("MSUBS_H"   #x1)    ;; mul sub saturated
    ("MULS_H"    #x2)    ;; mul saturated
-   ("MULH_H"    #x3)    ;; mul and get higher word
+   ("MULH_H"    #x3)    ;; mul and get higher halfword
    ("MADDUS_H"  #x4)    ;; mul add unsigned saturated
    ("MSUBUS_H"  #x5)    ;; mul sub unsigned saturated
    ("MULUS_H"   #x6)    ;; mul unsigned saturated
-   ("MULUH_H"   #x7)    ;; mul unsigned and get higher word
-   ("MULBB_H"   #x8)    ;; mul bottom x bottom
-   ("MULBT_H"   #x9)    ;; mul bottom x top
-   ("MULTB_H"   #xA)    ;; mul top x bottom
-   ("MULTT_H"   #xB)    ;; mul top x top
-   ("MULUBB_H"  #xC)    ;; mul signed bottom x bottom
-   ("MULUBT_H"  #xD)    ;; mul signed bottom x top
-   ("MULUTB_H"  #xE)    ;; mul signed top x bottom
-   ("MULUTT_H"  #xF)    ;; mul signed top x top
+   ("MULUH_H"   #x7)    ;; mul unsigned and get higher halfword
+   ("MULS_B"    #xa)    ;; mul byte saturated
+   ("MULH_B"    #xb)    ;; mul byte and get higher byte
+   ("MULUS_B"   #xe)    ;; mul byte unsigned saturated
+   ("MULUH_B"   #xf)    ;; mul byte unsigned and get higher byte
    )
   )
 
@@ -1487,8 +1483,8 @@
 (define-normal-insn-enum insn-opcode-mul-size 
   "move insn opcode enums" ((MACH ORBIS-MACHS)) 
   OPC_DSP_MUL_ f-op-7-5
-    (("HALF" #x11 )
-     ("FULL" #x12 )
+    (("HALF" #x12 )
+     ("FULL" #x13 )
     )
 )
 
@@ -2263,6 +2259,68 @@
           (set UHI d0 (if (eq high 1) (subword UHI t0 1) (subword UHI (saturate t0 #x0000 #xFFFF) 0)))
           (set UHI d1 (if (eq high 1) (subword UHI t1 1) (subword UHI (saturate t1 #x0000 #xFFFF) 0)))
           (set USI rD (join USI UHI d1 d0))
+        )
+        ()
+    )
+    (dni(.sym ld- op_str op_str2 -b)
+        (.str "ld." op_str op_str2 ".b" " reg/reg/reg")
+        ((MACH ORBIS-MACHS))
+        (.str "ld." op_str op_str2 ".b" " $rD,$rA,$rB")
+        (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MUL (.sym OPC_DSP_MUL_ (.upcase (.str op_str op_str2 "_b"))))
+        (sequence (
+            (SI a0) (SI a1) (SI a2) (SI a3)
+            (SI b0) (SI b1) (SI b2) (SI b3)
+            (SI t0) (SI t1) (SI t2) (SI t3)
+            (QI d0) (QI d1) (QI d2) (QI d3)
+            )
+          (set SI a0 (ext (subword QI rA 0)))
+          (set SI a1 (ext (subword QI rA 1)))
+          (set SI a2 (ext (subword QI rA 2)))
+          (set SI a3 (ext (subword QI rA 3)))
+          (set SI b0 (ext (subword QI rB 0)))
+          (set SI b1 (ext (subword QI rB 1)))
+          (set SI b2 (ext (subword QI rB 2)))
+          (set SI b3 (ext (subword QI rB 3)))
+          (set SI t0 (mul a0 b0))
+          (set SI t1 (mul a1 b1))
+          (set SI t2 (mul a2 b2))
+          (set SI t3 (mul a3 b3))
+          (set QI d0 (if (eq high 1) (subword QI t0 1) (subword QI (saturate t0 #x-80 #x7F) 0)))
+          (set QI d1 (if (eq high 1) (subword QI t1 1) (subword QI (saturate t1 #x-80 #x7F) 0)))
+          (set QI d2 (if (eq high 1) (subword QI t2 1) (subword QI (saturate t2 #x-80 #x7F) 0)))
+          (set QI d3 (if (eq high 1) (subword QI t3 1) (subword QI (saturate t3 #x-80 #x7F) 0)))
+          (set SI rD (join SI QI d2 d2 d1 d0))
+        )
+        ()
+    )
+    (dni(.sym ld- op_str u op_str2 -b)
+        (.str "ld." op_str "u" op_str2 ".b" " reg/reg/reg")
+        ((MACH ORBIS-MACHS))
+        (.str "ld." op_str "u" op_str2 ".b" " $rD,$rA,$rB")
+        (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MUL (.sym OPC_DSP_MUL_ (.upcase (.str op_str "u" op_str2 "_b"))))
+        (sequence (
+            (USI a0) (USI a1) (USI a2) (USI a3)
+            (USI b0) (USI b1) (USI b2) (USI b3)
+            (USI t0) (USI t1) (USI t2) (USI t3)
+            (UQI d0) (UQI d1) (UQI d2) (UQI d3)
+            )
+          (set USI a0 (ext (subword UQI rA 0)))
+          (set USI a1 (ext (subword UQI rA 1)))
+          (set USI a2 (ext (subword UQI rA 2)))
+          (set USI a3 (ext (subword UQI rA 3)))
+          (set USI b0 (ext (subword UQI rB 0)))
+          (set USI b1 (ext (subword UQI rB 1)))
+          (set USI b2 (ext (subword UQI rB 2)))
+          (set USI b3 (ext (subword UQI rB 3)))
+          (set USI t0 (mul a0 b0))
+          (set USI t1 (mul a1 b1))
+          (set USI t2 (mul a2 b2))
+          (set USI t3 (mul a3 b3))
+          (set UQI d0 (if (eq high 1) (subword UQI t0 1) (subword UQI (saturate t0 #x00 #xFF) 0)))
+          (set UQI d1 (if (eq high 1) (subword UQI t1 1) (subword UQI (saturate t1 #x00 #xFF) 0)))
+          (set UQI d2 (if (eq high 1) (subword UQI t2 1) (subword UQI (saturate t2 #x00 #xFF) 0)))
+          (set UQI d3 (if (eq high 1) (subword UQI t3 1) (subword UQI (saturate t3 #x00 #xFF) 0)))
+          (set USI rD (join USI UQI d2 d2 d1 d0))
         )
         ()
     )

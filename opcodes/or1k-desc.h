@@ -409,10 +409,9 @@ typedef enum insn_opcode_acc {
 
 /* Enum declaration for mul insn opcode enums.  */
 typedef enum insn_opcode_mul {
-  OPC_DSP_MUL_MADDS_H, OPC_DSP_MUL_MSUBS_H, OPC_DSP_MUL_MULS_H, OPC_DSP_MUL_MULH_H
- , OPC_DSP_MUL_MADDUS_H, OPC_DSP_MUL_MSUBUS_H, OPC_DSP_MUL_MULUS_H, OPC_DSP_MUL_MULUH_H
- , OPC_DSP_MUL_MULBB_H, OPC_DSP_MUL_MULBT_H, OPC_DSP_MUL_MULTB_H, OPC_DSP_MUL_MULTT_H
- , OPC_DSP_MUL_MULUBB_H, OPC_DSP_MUL_MULUBT_H, OPC_DSP_MUL_MULUTB_H, OPC_DSP_MUL_MULUTT_H
+  OPC_DSP_MUL_MADDS_H = 0, OPC_DSP_MUL_MSUBS_H = 1, OPC_DSP_MUL_MULS_H = 2, OPC_DSP_MUL_MULH_H = 3
+ , OPC_DSP_MUL_MADDUS_H = 4, OPC_DSP_MUL_MSUBUS_H = 5, OPC_DSP_MUL_MULUS_H = 6, OPC_DSP_MUL_MULUH_H = 7
+ , OPC_DSP_MUL_MULS_B = 10, OPC_DSP_MUL_MULH_B = 11, OPC_DSP_MUL_MULUS_B = 14, OPC_DSP_MUL_MULUH_B = 15
 } INSN_OPCODE_MUL;
 
 /* Enum declaration for mul word insn opcode enums.  */
@@ -433,7 +432,7 @@ typedef enum insn_opcode_move_size {
 
 /* Enum declaration for move insn opcode enums.  */
 typedef enum insn_opcode_mul_size {
-  OPC_DSP_MUL_HALF = 17, OPC_DSP_MUL_FULL = 18
+  OPC_DSP_MUL_HALF = 18, OPC_DSP_MUL_FULL = 19
 } INSN_OPCODE_MUL_SIZE;
 
 /* Enum declaration for extension insn opcode enums.  */
